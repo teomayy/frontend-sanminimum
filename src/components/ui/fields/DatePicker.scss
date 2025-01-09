@@ -1,0 +1,33 @@
+.rdp {
+	--rdp-cell-size: 32px;
+	--rdp-caption-font-size: 17px;
+	--rdp-background-color: rgba(255, 255, 255, 0.2);
+	--rdp-accent-color: #7551ff;
+	--rdp-today-color: #7551ff;
+
+	.rdp-root {
+		--rdp-accent-color: rgb(197, 39, 163);
+		/* Use blue as the accent color. */
+	}
+	[data-theme='dark'] .rdp-root {
+		--rdp-accent-color: yellow;
+		/* Use yellow as the accent color in dark mode. */
+	}
+
+	.rdp-caption_dropdowns {
+		background-color: #2b2b2b; /* Ваш цвет фона */
+		color: #ffffff; /* Цвет текста */
+	}
+
+	.rdp-dropdown {
+		background-color: #2b2b2b; /* Ваш цвет фона */
+		color: #ffffff; /* Цвет текста */
+		border: 1px solid #444444; /* Цвет границы */
+	}
+
+	.rdp-dropdown {
+		background-color: #2b2b2b; /* Ваш цвет фона */
+		color: #ffffff; /* Цвет текста */
+		border: 1px solid #444444; /* Цвет границы */
+	}
+}
