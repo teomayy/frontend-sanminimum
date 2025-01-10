@@ -29,6 +29,7 @@ export function CreateReportForm() {
 			reset()
 		},
 		onError(error: any) {
+			console.error('Ошибка создания заявки:', error)
 			toast.error(error.response?.data.message || 'Ошибка при создании заявки')
 		}
 	})
