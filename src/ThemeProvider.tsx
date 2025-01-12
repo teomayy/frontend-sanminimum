@@ -7,5 +7,12 @@ interface ProviderProps {
 }
 
 export default function Provider({ children }: ProviderProps) {
-	return <ThemeProvider attribute='class'>{children}</ThemeProvider>
+	return (
+		<ThemeProvider
+			attribute='class'
+			defaultTheme='dark'
+		>
+			{children}
+		</ThemeProvider>
+	)
 }

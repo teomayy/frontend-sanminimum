@@ -12,7 +12,7 @@ import { IMenuItem } from './menu.interface'
 export const MENU: IMenuItem[] = [
 	{
 		icon: LayoutDashboard,
-		link: DASHBOARD_PAGES.HOME,
+		link: DASHBOARD_PAGES.HOME_DOCTOR,
 		name: 'Панель управления'
 	},
 	{
@@ -27,7 +27,7 @@ export const MENU: IMenuItem[] = [
 	},
 	{
 		icon: Settings,
-		link: DASHBOARD_PAGES.SETTINGS,
+		link: DASHBOARD_PAGES.SETTINGS_DOCTOR,
 		name: 'Настройки'
 	}
 ]

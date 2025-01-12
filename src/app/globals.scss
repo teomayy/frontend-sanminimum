@@ -30,6 +30,11 @@ body {
 	}
 }
 
+body.dark select {
+	background-color: #2b2b2b;
+	color: white;
+}
+
 input.defaultCheckbox {
 	color: white;
 }

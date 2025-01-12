@@ -15,6 +15,7 @@ export function useLocalStorage<T>({
 	const [value, setValue] = useState<T>(defaultValue)
 
 	useEffect(() => {
+		if (typeof window === 'undefined') return
 		try {
 			const item = window.localStorage.getItem(key)
 			if (item) {

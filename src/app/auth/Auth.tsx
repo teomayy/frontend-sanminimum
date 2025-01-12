@@ -40,9 +40,9 @@ export function Auth() {
 		mutate(data)
 	}
 	return (
-		<div className='flex min-h-screen'>
+		<div className='flex min-h-screen dark:bg-[#0b0c2e] bg-[#6e6541]'>
 			<form
-				className='w-1/4 m-auto dark:bg-sidebar bg-brandLinear text-white bg-text-black  rounded-xl p-layout'
+				className='w-1/4 m-auto dark:bg-sidebar bg-[#b19e70] text-white bg-text-black  rounded-xl p-layout'
 				onSubmit={handleSubmit(onSubmit)}
 			>
 				<Heading title='Авторизация' />

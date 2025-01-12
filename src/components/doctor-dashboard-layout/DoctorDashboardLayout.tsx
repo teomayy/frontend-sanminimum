@@ -3,7 +3,7 @@ import { PropsWithChildren } from 'react'
 import { Header } from './header/Header'
 import { Sidebar } from './sidebar/Sidebar'
 
-export default function DashboardLayout({
+export default function DoctorDashboardLayout({
 	children
 }: PropsWithChildren<unknown>) {
 	return (

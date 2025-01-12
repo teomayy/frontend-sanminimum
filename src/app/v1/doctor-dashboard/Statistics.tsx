@@ -2,17 +2,17 @@
 
 import Loader from '@/components/ui/Loader'
 
-import { useProfile } from '@/hooks/useProfile'
+import { useDoctorProfile } from '@/hooks/useDoctorProfile'
 
 export function Statistics() {
-	const { data, isLoading } = useProfile()
+	const { data, isLoading } = useDoctorProfile()
 
 	return isLoading ? (
 		<Loader />
 	) : (
 		<div className='grid grid-cols-3 gap-12 mt-7'>
-			{data?.statistics.length ? (
-				data.statistics.map(statistic => (
+			{data?.statistics?.length ? (
+				data.statistics?.map(statistic => (
 					<div
 						className='bg-primary dark:bg-border/5 rounded p-layout text-center text-white  hover:-translate-y-3 transition-transform duration-500'
 						key={statistic.label}

@@ -14,7 +14,7 @@ export function Sidebar() {
 		<aside className='border-r border-r-brandLinear dark:border-r-border h-full flex flex-col justify-between dark:bg-sidebar'>
 			<div>
 				<Link
-					href={DASHBOARD_PAGES.HOME}
+					href={DASHBOARD_PAGES.HOME_DOCTOR}
 					className='flex items-center gap-2.5 p-layout border-b
 					border-b-brandLinear dark:border-b-border'
 				>

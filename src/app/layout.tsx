@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import type { Metadata } from 'next'
 import { Noto_Sans } from 'next/font/google'
 import { Toaster } from 'sonner'
@@ -23,6 +24,8 @@ export const metadata: Metadata = {
 	},
 	description: 'Arbic development'
 }
+
+dayjs.locale('uz')
 
 export default function RootLayout({
 	children

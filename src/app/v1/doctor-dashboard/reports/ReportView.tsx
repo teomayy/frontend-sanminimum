@@ -91,12 +91,12 @@ export function ReportView() {
 					/>
 				</div>
 
-				<div className='flex flex-col gap-2 text-[#000] dark:text-white/50 '>
+				<div className='flex flex-col gap-2 text-[#000] dark:bg-transparent dark:text-white/50 '>
 					<label>По статусу</label>
 					<select
 						value={statusFilter}
 						onChange={e => setStatusFilter(e.target.value as any)}
-						className='border relative  flex items-center justify-between r border-border dark:bg-transparent p-3 text-base rounded-lg'
+						className='border relative  flex items-center justify-between r border-border  p-3 text-base rounded-lg'
 					>
 						<option value='all'>Все</option>
 						<option value='expired'>Истек</option>
@@ -135,7 +135,7 @@ export function ReportView() {
 			<div className='overflow-x-hidden max-h-screen mt-20'>
 				<table className='table-auto w-full  text-left border-collapse'>
 					<thead className='dark:text-brandLinear sticky top-0 z-10 '>
-						<tr className=''>
+						<tr className='border-b'>
 							<th className='border-b px-4 py-2'>ФИО</th>
 							<th className='border-b px-4 py-2'>Место работы</th>
 							<th className='border-b px-4 py-2'>Дата выдачи</th>

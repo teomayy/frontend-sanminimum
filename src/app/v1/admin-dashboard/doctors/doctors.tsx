@@ -1,0 +1,136 @@
+'use client'
+
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
+import { toast } from 'sonner'
+
+import { Heading } from '@/components/ui/Heading'
+import Loader from '@/components/ui/Loader'
+import { Button } from '@/components/ui/buttons/Button'
+import { Field } from '@/components/ui/fields/Field'
+
+import { adminService } from '@/services/admin.service'
+
+export default function DoctorPage() {
+	const [newDoctor, setNewDoctor] = useState({
+		login: '',
+		name: '',
+		password: ''
+	})
+
+	const {
+		data: doctors,
+		refetch,
+		isPending
+	} = useQuery({
+		queryKey: ['doctors'],
+		queryFn: adminService.getDoctors
+	})
+
+	const { mutate: addDoctor } = useMutation({
+		mutationKey: ['addDoctor'],
+		mutationFn: adminService.addDoctor,
+		onSuccess() {
+			toast.success('Доктор добавлен успешно')
+			refetch()
+			setNewDoctor({ login: '', name: '', password: '' })
+		},
+		onError: (error, any) => {
+			toast.error(error.message || 'Ошибка добавления доктора')
+		}
+	})
+
+	const handleAddDoctor = () => {
+		addDoctor(newDoctor)
+	}
+
+	const { mutate: deleteDoctor } = useMutation({
+		mutationKey: ['deleteDoctor'],
+		mutationFn: adminService.deleteDoctor,
+		onSuccess() {
+			toast.success('Доктор успешно удален!')
+			refetch()
+		},
+		onError: error => {
+			toast.error(error.message || 'Ошибка удаления доктора')
+		}
+	})
+
+	return (
+		<div>
+			<Heading title='Управление докторами' />
+
+			<div className='mb-4'>
+				<h2 className='text-xl font-semibold mb-4'>Добавить нового доктора</h2>
+				<Field
+					id='login'
+					label='Логин'
+					type='text'
+					placeholder='Логин'
+					value={newDoctor.login}
+					onChange={e => setNewDoctor({ ...newDoctor, login: e.target.value })}
+				/>
+				<Field
+					id='fullName'
+					type='text'
+					label='ФИО'
+					placeholder='ФИО'
+					value={newDoctor.name}
+					extra='mb-4'
+					onChange={e => setNewDoctor({ ...newDoctor, name: e.target.value })}
+				/>
+				<Field
+					id='password'
+					type='password'
+					label='Пароль'
+					placeholder='Пароль'
+					value={newDoctor.password}
+					extra='mb-4'
+					onChange={e =>
+						setNewDoctor({ ...newDoctor, password: e.target.value })
+					}
+				/>
+				<Button onClick={handleAddDoctor}>Добавить</Button>
+			</div>
+			<div className='my-3 h-0.5 bg-brandLinear dark:bg-border w-full' />
+
+			<h2 className='text-xl font-semibold'>Список докторов</h2>
+			{isPending ? (
+				<Loader />
+			) : (
+				<table className='table-auto w-full  text-left border-collapse'>
+					<thead className='dark:text-brandLinear sticky top-0 z-10'>
+						<tr className='border-b '>
+							<th className='border-b px-4 py-2'>#</th>
+							<th className='border-b px-4 py-2'>ФИО</th>
+							<th className='border-b px-4 py-2'>Логин</th>
+							<th className='border-b px-4 py-2'>Действия</th>
+						</tr>
+					</thead>
+					<tbody>
+						{doctors?.data.map((doctor, index) => (
+							<tr
+								key={doctor.id}
+								className='hover:bg-[#14165b]'
+							>
+								<td className='border-b px-4 py-2'>{index + 1}</td>
+								<td className='border-b px-4 py-2'>{doctor.name}</td>
+								<td className='border-b px-4 py-2'>{doctor.login}</td>
+								<td className='border-b px-4 py-2'>
+									<button
+										onClick={() => {
+											deleteDoctor(doctor.id)
+										}}
+										className='bg-red-600 p-3 text-white rounded-lg hover:bg-red-700'
+									>
+										Удалить
+									</button>
+								</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			)}
+		</div>
+	)
+}

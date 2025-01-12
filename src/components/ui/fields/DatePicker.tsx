@@ -12,6 +12,7 @@ import { useOutside } from '@/hooks/useOutside'
 
 import './DatePicker.scss'
 
+dayjs.locale('uz')
 dayjs.extend(LocalizedFormat)
 
 interface DatePickerFieldProps {
