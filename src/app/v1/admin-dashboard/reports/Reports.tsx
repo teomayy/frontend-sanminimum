@@ -14,7 +14,6 @@ import { adminService } from '@/services/admin.service'
 export default function ReportsPage() {
 	const [filters, setFilters] = useState({
 		searchQuery: '',
-		doctorId: '',
 		status: 'all',
 		startDate: '',
 		endDate: ''
@@ -23,18 +22,12 @@ export default function ReportsPage() {
 	const pageSize = 10
 
 	const {
-		data: reports,
+		data: reports = [],
 		isLoading,
 		refetch
 	} = useQuery({
-		queryKey: ['reports', filters],
-		queryFn: () => adminService.getReports(filters.doctorId || undefined),
-		staleTime: 5000
-	})
-
-	const { data: doctors } = useQuery({
-		queryKey: ['doctors'],
-		queryFn: adminService.getDoctors
+		queryKey: ['reports'],
+		queryFn: () => adminService.getReports()
 	})
 
 	const handleFilterChange = (field: string, value: string) => {
@@ -55,26 +48,26 @@ export default function ReportsPage() {
 				})
 		}
 	}
-
-	const getStatusLabel = (expiryDate: string) => {
+	const getStatusColor = (expiryDate: string) => {
 		const today = dayjs()
 		const expiry = dayjs(expiryDate)
 		const daysLeft = expiry.diff(today, 'days')
 
-		if (daysLeft < 0) return { label: 'Истек', color: 'text-red-500' }
-		if (daysLeft <= 10)
-			return { label: 'Скоро истечет', color: 'text-yellow-500' }
-		return { label: 'Действителен', color: 'text-green-500' }
+		if (daysLeft < 0) return 'text-red-500' // Истек
+		if (daysLeft <= 10) return 'text-yellow-500' // Скоро истечет
+		return 'text-green-500' // Действителен
 	}
 
-	const filteredReports = reports?.filter(report => {
+	const filteredReports = reports.filter(report => {
+		// Поиск
 		const matchesQuery =
-			filters.searchQuery === '' ||
+			!filters.searchQuery ||
 			report.fullName
 				.toLowerCase()
 				.includes(filters.searchQuery.toLowerCase()) ||
 			report.workplace.toLowerCase().includes(filters.searchQuery.toLowerCase())
 
+		// Фильтр по статусу
 		const expiryDate = dayjs(report.expiryDate)
 		const today = dayjs()
 		let matchesStatus = true
@@ -85,6 +78,9 @@ export default function ReportsPage() {
 		else if (filters.status === 'valid')
 			matchesStatus = expiryDate.diff(today, 'days') > 10
 
+		// Функция для получения цвета статуса
+
+		// Фильтр по диапазону дат
 		const matchesDateRange =
 			(!filters.startDate ||
 				dayjs(report.issueDate).isAfter(dayjs(filters.startDate))) &&
@@ -94,61 +90,43 @@ export default function ReportsPage() {
 		return matchesQuery && matchesStatus && matchesDateRange
 	})
 
-	const paginatedReports = filteredReports?.slice(
+	const paginatedReports = filteredReports.slice(
 		(currentPage - 1) * pageSize,
 		currentPage * pageSize
 	)
 
-	if (isLoading) {
-		return <Loader />
-	}
+	if (isLoading) return <Loader />
 
 	return (
 		<div className='p-6 rounded-lg'>
 			<Heading title='Управление отчетами' />
+
 			<div className='flex gap-6 mb-6'>
-				<div className='flex flex-col gap-2  items-center w-[400px]'>
-					<label htmlFor=''>Поиск</label>
+				<div className='flex flex-col gap-2 w-[400px]'>
+					<label htmlFor='search'>Поиск</label>
 					<input
 						type='text'
+						id='search'
 						placeholder='Поиск по имени или месту работы'
 						value={filters.searchQuery}
 						onChange={e => handleFilterChange('searchQuery', e.target.value)}
-						className='bg-transparent border-b p-3 rounded w-[400px]'
+						className='border p-3 rounded'
 					/>
 				</div>
-				<div className=' flex gap-7 justify-center items-center'>
-					<div className='flex flex-col gap-2'>
-						<label htmlFor=''>По докторам</label>
-						<select
-							value={filters.doctorId}
-							onChange={e => handleFilterChange('doctorId', e.target.value)}
-							className='border p-3 rounded '
-						>
-							<option value=''>Все доктора</option>
-							{doctors?.data.map(doctor => (
-								<option
-									key={doctor.id}
-									value={doctor.id}
-								>
-									{doctor.name}
-								</option>
-							))}
-						</select>
-					</div>
-					<div className='flex flex-col gap-2'>
-						<label htmlFor=''>По статусу</label>
-						<select
-							value={filters.status}
-							onChange={e => handleFilterChange('status', e.target.value)}
-							className='border p-3 rounded'
-						>
-							<option value='all'>Все</option>
-							<option value='expired'>Истек</option>
-							<option value='soon'>Скоро истечет</option>
-							<option value='valid'>Действителен</option>
-						</select>
-					</div>
+
+				<div className='flex flex-col gap-2'>
+					<label htmlFor='status'>По статусу</label>
+					<select
+						id='status'
+						value={filters.status}
+						onChange={e => handleFilterChange('status', e.target.value)}
+						className='border p-3 rounded'
+					>
+						<option value='all'>Все</option>
+						<option value='expired'>Истек</option>
+						<option value='soon'>Скоро истечет</option>
+						<option value='valid'>Действителен</option>
+					</select>
 				</div>
 
 				<DatePickerField
@@ -165,12 +143,11 @@ export default function ReportsPage() {
 				/>
 			</div>
 
-			<table className='table-auto w-full border-collapse'>
+			<table className='table-auto w-full text-left border-collapse'>
 				<thead>
 					<tr>
 						<th className='border-b px-4 py-2'>ФИО</th>
 						<th className='border-b px-4 py-2'>Место работы</th>
-						<th className='border-b px-4 py-2'>Доктор</th>
 						<th className='border-b px-4 py-2'>Дата выдачи</th>
 						<th className='border-b px-4 py-2'>Дата истечения</th>
 						<th className='border-b px-4 py-2'>Статус</th>
@@ -178,12 +155,11 @@ export default function ReportsPage() {
 					</tr>
 				</thead>
 				<tbody>
-					{paginatedReports && paginatedReports.length > 0 ? (
+					{paginatedReports.length > 0 ? (
 						paginatedReports.map(report => (
 							<tr key={report.id}>
 								<td className='border-b px-4 py-2'>{report.fullName}</td>
 								<td className='border-b px-4 py-2'>{report.workplace}</td>
-								<td className='border-b px-4 py-2'>{report.doctor.name}</td>
 								<td className='border-b px-4 py-2'>
 									{dayjs(report.issueDate).format('DD.MM.YYYY')}
 								</td>
@@ -191,9 +167,13 @@ export default function ReportsPage() {
 									{dayjs(report.expiryDate).format('DD.MM.YYYY')}
 								</td>
 								<td
-									className={`border-b px-4 py-2 ${getStatusLabel(report.expiryDate).color}`}
+									className={`border-b px-4 py-2 font-bold ${getStatusColor(report.expiryDate)}`}
 								>
-									{getStatusLabel(report.expiryDate).label}
+									{dayjs(report.expiryDate).isBefore(dayjs())
+										? 'Истек'
+										: dayjs(report.expiryDate).diff(dayjs(), 'days') <= 10
+											? 'Скоро истечет'
+											: 'Действителен'}
 								</td>
 								<td className='border-b px-4 py-2'>
 									<button
@@ -208,7 +188,7 @@ export default function ReportsPage() {
 					) : (
 						<tr>
 							<td
-								colSpan={7}
+								colSpan={6}
 								className='text-center'
 							>
 								Нет отчетов
@@ -217,31 +197,29 @@ export default function ReportsPage() {
 					)}
 				</tbody>
 			</table>
+
 			<div className='flex justify-between mt-4'>
 				<button
 					onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
 					disabled={currentPage === 1}
-					className='px-4 py-2 bg-gray-300 rounded hover:bg-gray-400'
+					className='px-4 py-2 bg-secondary cursor-pointe rounded hover:bg-gray-400'
 				>
 					Предыдущая
 				</button>
 				<span>
 					Страница {currentPage} из{' '}
-					{Math.ceil((filteredReports?.length || 0) / pageSize)}
+					{Math.ceil(filteredReports.length / pageSize)}
 				</span>
 				<button
 					onClick={() =>
 						setCurrentPage(prev =>
-							Math.min(
-								prev + 1,
-								Math.ceil((filteredReports?.length || 0) / pageSize)
-							)
+							Math.min(prev + 1, Math.ceil(filteredReports.length / pageSize))
 						)
 					}
 					disabled={
-						currentPage === Math.ceil((filteredReports?.length || 0) / pageSize)
+						currentPage === Math.ceil(filteredReports.length / pageSize)
 					}
-					className='px-4 py-2 bg-gray-300 rounded hover:bg-gray-400'
+					className='px-4 py-2 cursor-pointer bg-secondary rounded hover:bg-gray-400'
 				>
 					Следующая
 				</button>

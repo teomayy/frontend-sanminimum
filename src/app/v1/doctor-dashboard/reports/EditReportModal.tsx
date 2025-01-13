@@ -27,7 +27,7 @@ export function EditReportModal({
 			onClose={handleClose}
 			className='fixed inset-0 z-10 flex items-center justify-center   dark:bg-black/50'
 		>
-			<Dialog.Panel className='bg-[#958eb1] dark:bg-black rounded-lg p-6 w-[90%] max-w-lg'>
+			<Dialog.Panel className='dark:bg-[#160d3a] bg-gray-200 rounded-lg p-6 w-[90%] max-w-lg'>
 				<Dialog.Title className='text-xl font-bold mb-4'>
 					Редактирование отчета
 				</Dialog.Title>

@@ -3,12 +3,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import { EnumTokens } from './services/auth-token.service'
 
 export async function middleware(req: NextRequest) {
+	const url = req.nextUrl.clone()
 	const refreshToken = req.cookies.get(EnumTokens.REFRESH_TOKEN)?.value
-	console.log('REFRESH TOKEN:', refreshToken)
+
+	if (url.pathname === '/') {
+		url.pathname = '/v1'
+		return NextResponse.redirect(url)
+	}
 
 	if (!refreshToken) {
 		if (!req.nextUrl.pathname.startsWith('/auth')) {
-			return NextResponse.redirect(new URL('/auth', req.url))
+			url.pathname = '/auth'
+			return NextResponse.redirect(url)
 		}
 		return NextResponse.next()
 	}
@@ -17,7 +23,8 @@ export async function middleware(req: NextRequest) {
 	const userRole = await getUserRole(refreshToken)
 
 	if (!userRole) {
-		return NextResponse.redirect(new URL('/auth', req.url))
+		url.pathname = '/auth'
+		return NextResponse.redirect(url)
 	}
 
 	const isAdmin = userRole === 'admin'

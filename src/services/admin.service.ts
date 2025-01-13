@@ -32,5 +32,10 @@ export const adminService = {
 	async deleteDoctor(id: string) {
 		const response = await axiosWithAuth.delete(`admin/doctor/${id}`)
 		return response.data
+	},
+
+	async deleteReport(id: string) {
+		const response = await axiosWithAuth.delete(`/admin/report/${id}`)
+		return response.data
 	}
 }
