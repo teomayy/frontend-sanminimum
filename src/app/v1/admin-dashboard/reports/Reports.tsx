@@ -1,6 +1,6 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 import { Heading } from '@/components/ui/Heading'
 import Loader from '@/components/ui/Loader'
 import { DatePickerField } from '@/components/ui/fields/DatePicker'
+import { ConfirmPopup } from '@/components/ui/popups/ConfirmPopup'
 
 import { adminService } from '@/services/admin.service'
 
@@ -20,6 +21,7 @@ export default function ReportsPage() {
 	})
 	const [currentPage, setCurrentPage] = useState(1)
 	const pageSize = 10
+	const [selectedReport, setSelectedReport] = useState<string | null>(null)
 
 	const {
 		data: reports = [],
@@ -35,19 +37,26 @@ export default function ReportsPage() {
 		setCurrentPage(1)
 	}
 
-	const handleDelete = (reportId: string) => {
-		if (confirm('Вы уверены, что хотите удалить этот отчет?')) {
-			adminService
-				.deleteReport(reportId)
-				.then(() => {
-					toast.success('Отчет успешно удален!')
-					refetch()
-				})
-				.catch(() => {
-					toast.error('Ошибка при удалении отчета')
-				})
+	const { mutate: deleteReport } = useMutation({
+		mutationKey: ['deleteReport'],
+		mutationFn: adminService.deleteDoctor,
+		onSuccess: () => {
+			toast.success('Отчет успешно удален!')
+			refetch()
+			setSelectedReport(null)
+		},
+		onError: () => {
+			toast.error('Ошибка при удалении отчета')
+			setSelectedReport(null)
+		}
+	})
+
+	const handleConfirmDelete = () => {
+		if (selectedReport) {
+			deleteReport(selectedReport)
 		}
 	}
+
 	const getStatusColor = (expiryDate: string) => {
 		const today = dayjs()
 		const expiry = dayjs(expiryDate)
@@ -177,7 +186,7 @@ export default function ReportsPage() {
 								</td>
 								<td className='border-b px-4 py-2'>
 									<button
-										onClick={() => handleDelete(report.id)}
+										onClick={() => setSelectedReport(report.id)}
 										className='bg-red-600 text-white px-3 py-2 rounded'
 									>
 										Удалить
@@ -224,6 +233,13 @@ export default function ReportsPage() {
 					Следующая
 				</button>
 			</div>
+			{selectedReport && (
+				<ConfirmPopup
+					message='Вы уверены, что хотите удалить этот отчет?'
+					onConfirm={handleConfirmDelete}
+					onCancel={() => setSelectedReport(null)}
+				/>
+			)}
 		</div>
 	)
 }

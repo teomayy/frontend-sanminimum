@@ -11,6 +11,7 @@ export default function Provider({ children }: ProviderProps) {
 		<ThemeProvider
 			attribute='class'
 			defaultTheme='dark'
+			enableSystem
 		>
 			{children}
 		</ThemeProvider>

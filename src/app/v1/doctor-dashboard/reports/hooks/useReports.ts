@@ -5,13 +5,18 @@ import type { ICreateReportDto } from '@/types/report.types'
 
 import { reportService } from '@/services/report.service'
 
-export function useReports(filters?: Record<string, any>) {
+export function useReports(isDeleted: boolean = false) {
 	const queryClient = useQueryClient()
 
-	const { data: reports = [], isLoading: isLoadingReports } = useQuery({
-		queryKey: ['reports', filters],
-		queryFn: () => reportService.getReportsByDoctor(filters),
-		select: data => data || []
+	const {
+		data: reports = [],
+		isLoading: isLoadingReports,
+		refetch
+	} = useQuery({
+		queryKey: ['reports', isDeleted],
+		queryFn: () => reportService.getReportsByDoctor(isDeleted),
+		select: data => data || [],
+		staleTime: 5000
 	})
 
 	const { mutate: createReport } = useMutation({
@@ -56,6 +61,26 @@ export function useReports(filters?: Record<string, any>) {
 		}
 	})
 
+	const { mutate: archiveReport } = useMutation({
+		mutationKey: ['archiveReport'],
+		mutationFn: (id: string) => reportService.archiveReport(id),
+		onSuccess: () => {
+			toast.success('Успешно архивирован!')
+			queryClient.invalidateQueries({ queryKey: ['reports'] })
+			refetch()
+		}
+	})
+
+	const { mutate: restoreReport } = useMutation({
+		mutationKey: ['restoreReport'],
+		mutationFn: (id: string) => reportService.restoreReport(id),
+		onSuccess: () => {
+			toast.success('Успешно восстановлен!')
+			queryClient.invalidateQueries({ queryKey: ['reports'] })
+			refetch()
+		}
+	})
+
 	return {
 		reports,
 		isLoadingReports,
@@ -63,6 +88,9 @@ export function useReports(filters?: Record<string, any>) {
 		deleteReport,
 		updateReport,
 		isDeletePending,
-		isUpdatePending
+		isUpdatePending,
+		restoreReport,
+		archiveReport,
+		refetch
 	}
 }

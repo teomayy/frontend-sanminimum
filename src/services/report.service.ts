@@ -6,6 +6,7 @@ interface IReportFilters {
 	doctorId?: string
 	startDate?: string
 	endDate?: string
+	isDeleted?: boolean
 }
 
 class ReportService {
@@ -46,11 +47,12 @@ class ReportService {
 		}
 	}
 
-	async getReportsByDoctor(filters?: IReportFilters): Promise<IReport[]> {
+	async getReportsByDoctor(isDeleted?: boolean): Promise<IReport[]> {
 		try {
 			const response = await axiosWithAuth.get<IReport[]>(this.BASE_URL, {
-				params: filters
+				params: isDeleted !== undefined ? { isDeleted } : {}
 			})
+			console.log('asas', response.data)
 			return response.data
 		} catch (error) {
 			console.error('Ошибка при получении отчетов врача:', error)
@@ -79,6 +81,26 @@ class ReportService {
 		} catch (error) {
 			console.error(`Ошибка при получении отчета с ID ${id}:`, error)
 			throw new Error('Не удалось получить отчет')
+		}
+	}
+
+	// 📌 **Архивирование отчета**
+	async archiveReport(id: string): Promise<void> {
+		try {
+			await axiosWithAuth.patch(`${this.BASE_URL}/${id}/archive`)
+		} catch (error) {
+			console.error(`Ошибка при архивировании отчета с ID ${id}:`, error)
+			throw new Error('Не удалось архивировать отчет')
+		}
+	}
+
+	// 📌 **Восстановление отчета из архива**
+	async restoreReport(id: string): Promise<void> {
+		try {
+			await axiosWithAuth.patch(`${this.BASE_URL}/${id}/restore`)
+		} catch (error) {
+			console.error(`Ошибка при восстановлении отчета с ID ${id}:`, error)
+			throw new Error('Не удалось восстановить отчет')
 		}
 	}
 }

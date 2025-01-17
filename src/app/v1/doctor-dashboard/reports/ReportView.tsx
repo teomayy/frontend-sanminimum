@@ -2,55 +2,78 @@
 
 import dayjs from 'dayjs'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import Loader from '@/components/ui/Loader'
 import { DatePickerField } from '@/components/ui/fields/DatePicker'
+import { ConfirmPopup } from '@/components/ui/popups/ConfirmPopup'
 
 import { EditReportModal } from './EditReportModal'
+import { ReportDate } from './ReportDate'
 import { useReports } from './hooks/useReports'
 
 export function ReportView() {
-	const { reports, isLoadingReports, deleteReport, isDeletePending } =
-		useReports()
+	const [isArchivedView, setIsArchivedView] = useState(false)
+	const {
+		reports,
+		isLoadingReports,
+		deleteReport,
+		isDeletePending,
+		archiveReport,
+		restoreReport
+	} = useReports(isArchivedView)
 
 	const [editingReport, setEditingReport] = useState<string | null>(null)
+	const [deletingReportId, setDeletingReportId] = useState<string | null>(null)
 	const [searchQuery, setSearchQuery] = useState('')
 	const [statusFilter, setStatusFilter] = useState<
 		'all' | 'expired' | 'soon' | 'valid'
 	>('all')
+
 	const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' })
 
 	const router = useRouter()
 
 	// Функция для фильтрации данных
-	const filteredReports = reports?.filter(report => {
-		// Фильтр по поисковой строке
-		const matchesQuery =
-			searchQuery === '' ||
-			report.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-			report.workplace.toLowerCase().includes(searchQuery.toLowerCase())
+	const filteredReports = useMemo(() => {
+		if (!reports) return []
 
-		// Фильтр по статусу
-		const expiryDate = dayjs(report.expiryDate)
-		const today = dayjs()
-		let matchesStatus = true
-		if (statusFilter === 'expired') matchesStatus = expiryDate.isBefore(today)
-		else if (statusFilter === 'soon')
-			matchesStatus =
-				expiryDate.diff(today, 'days') <= 10 && expiryDate.isAfter(today)
-		else if (statusFilter === 'valid')
-			matchesStatus = expiryDate.diff(today, 'days') > 10
+		return reports.filter(report => {
+			const matchesQuery =
+				searchQuery === '' ||
+				report.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+				report.workplace.toLowerCase().includes(searchQuery.toLowerCase())
 
-		// Фильтр по диапазону дат
-		const matchesDateRange =
-			(!dateRange.startDate ||
-				dayjs(report.issueDate).isAfter(dayjs(dateRange.startDate))) &&
-			(!dateRange.endDate ||
-				dayjs(report.issueDate).isBefore(dayjs(dateRange.endDate)))
+			const expiryDate = dayjs(report.expiryDate)
+			const today = dayjs()
+			let matchesStatus = true
+			if (statusFilter === 'expired') matchesStatus = expiryDate.isBefore(today)
+			else if (statusFilter === 'soon')
+				matchesStatus =
+					expiryDate.diff(today, 'days') <= 10 && expiryDate.isAfter(today)
+			else if (statusFilter === 'valid')
+				matchesStatus = expiryDate.diff(today, 'days') > 10
 
-		return matchesQuery && matchesStatus && matchesDateRange
-	})
+			const matchesDateRange =
+				(!dateRange.startDate ||
+					dayjs(report.issueDate).isAfter(dayjs(dateRange.startDate))) &&
+				(!dateRange.endDate ||
+					dayjs(report.issueDate).isBefore(dayjs(dateRange.endDate)))
+
+			return matchesQuery && matchesStatus && matchesDateRange
+		})
+	}, [reports, searchQuery, statusFilter, dateRange])
+
+	const handleDelete = useCallback((reportId: string) => {
+		setDeletingReportId(reportId)
+	}, [])
+
+	const confirmDelete = useCallback(() => {
+		if (deletingReportId) {
+			deleteReport(deletingReportId)
+			setDeletingReportId(null)
+		}
+	}, [deleteReport, deletingReportId])
 
 	if (isLoadingReports) {
 		return <Loader />
@@ -70,13 +93,23 @@ export function ReportView() {
 	return (
 		<div className=' p-6 rounded-lg '>
 			<div className='flex justify-between items-center mb-4'>
-				<h2 className='text-2xl font-bold mb-4'>Мои отчеты</h2>
-				<button
-					className='bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600'
-					onClick={() => router.push('/v1/create-reports')}
-				>
-					Добавить отчет
-				</button>
+				<h2 className='text-2xl font-bold mb-4'>
+					{isArchivedView ? 'Архив отчетов' : 'Мои отчеты'}
+				</h2>
+				<div className='flex gap-4'>
+					<button
+						className='bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600'
+						onClick={() => router.push('/v1/doctor-dashboard/create-reports')}
+					>
+						Добавить отчет
+					</button>
+					<button
+						className='bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600'
+						onClick={() => setIsArchivedView(!isArchivedView)}
+					>
+						{isArchivedView ? 'Показать активные' : 'Показать архив'}
+					</button>
+				</div>
 			</div>
 
 			<div className='flex gap-4 mb-6'>
@@ -151,35 +184,55 @@ export function ReportView() {
 									<td className='border-b px-4 py-2'>{report.fullName}</td>
 									<td className='border-b px-4 py-2'>{report.workplace}</td>
 									<td className='border-b px-4 py-2'>
-										{dayjs(report.issueDate).format('DD.MM.YYYY')}
+										<ReportDate date={report.issueDate} />
 									</td>
 									<td className='border-b px-4 py-2'>
-										{dayjs(report.expiryDate).format('DD.MM.YYYY')}
+										<ReportDate date={report.expiryDate} />
 									</td>
 									<td
 										className={`border-b px-4 py-2 font-bold ${getStatusColor(report.expiryDate)}`}
 									>
-										{dayjs(report.expiryDate).isBefore(dayjs())
+										{getStatusColor(report.expiryDate).includes('red')
 											? 'Истек'
-											: dayjs(report.expiryDate).diff(dayjs(), 'days') <= 10
+											: getStatusColor(report.expiryDate).includes('yellow')
 												? 'Скоро истечет'
 												: 'Действителен'}
 									</td>
 
 									<td className='border-b px-4 py-2 flex gap-5'>
-										<button
-											className='bg-primary rounded-lg p-3 text-white'
-											onClick={() => setEditingReport(report.id)}
-										>
-											Редактировать
-										</button>
-										<button
-											className='bg-red-600 p-3 text-white rounded-lg hover:bg-red-700'
-											onClick={() => deleteReport(report.id)}
-											disabled={isDeletePending}
-										>
-											Удалить
-										</button>
+										{isArchivedView ? (
+											<div className='flex flex-row gap-4 '>
+												<button
+													className='bg-green-600 p-3 text-white rounded-lg hover:bg-green-700'
+													onClick={() => restoreReport(report.id)}
+												>
+													Восстановить
+												</button>
+												<button
+													className='bg-red-600 p-3 text-white rounded-lg hover:bg-red-700'
+													onClick={() => handleDelete(report.id)}
+													disabled={isDeletePending}
+												>
+													Удалить
+												</button>
+											</div>
+										) : (
+											<div className='flex flex-row gap-4'>
+												{' '}
+												<button
+													className='bg-primary rounded-lg p-3 text-white'
+													onClick={() => setEditingReport(report.id)}
+												>
+													Редактировать
+												</button>
+												<button
+													className='bg-[#e47709] rounded-lg p-3'
+													onClick={() => archiveReport(report.id)}
+												>
+													Архивировать
+												</button>
+											</div>
+										)}
 									</td>
 								</tr>
 							))
@@ -195,6 +248,14 @@ export function ReportView() {
 						)}
 					</tbody>
 				</table>
+
+				{deletingReportId && (
+					<ConfirmPopup
+						message='Вы уверены, что хотите удалить отчет?'
+						onConfirm={confirmDelete}
+						onCancel={() => setDeletingReportId(null)}
+					/>
+				)}
 			</div>
 
 			{editingReport && (

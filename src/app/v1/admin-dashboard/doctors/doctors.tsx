@@ -8,6 +8,7 @@ import { Heading } from '@/components/ui/Heading'
 import Loader from '@/components/ui/Loader'
 import { Button } from '@/components/ui/buttons/Button'
 import { Field } from '@/components/ui/fields/Field'
+import { ConfirmPopup } from '@/components/ui/popups/ConfirmPopup'
 
 import { adminService } from '@/services/admin.service'
 
@@ -17,6 +18,8 @@ export default function DoctorPage() {
 		name: '',
 		password: ''
 	})
+
+	const [selectedDoctor, setSelectedDoctor] = useState<string | null>(null)
 
 	const {
 		data: doctors,
@@ -50,11 +53,23 @@ export default function DoctorPage() {
 		onSuccess() {
 			toast.success('Доктор успешно удален!')
 			refetch()
+			setSelectedDoctor(null)
 		},
 		onError: error => {
 			toast.error(error.message || 'Ошибка удаления доктора')
+			setSelectedDoctor(null)
 		}
 	})
+
+	const confirmDeleteDoctor = (doctorId: string) => {
+		setSelectedDoctor(doctorId)
+	}
+
+	const handleConfirmDelete = () => {
+		if (selectedDoctor) {
+			deleteDoctor(selectedDoctor)
+		}
+	}
 
 	return (
 		<div>
@@ -108,10 +123,10 @@ export default function DoctorPage() {
 						</tr>
 					</thead>
 					<tbody>
-						{doctors?.data.map((doctor, index) => (
+						{doctors?.data?.map((doctor, index) => (
 							<tr
 								key={doctor.id}
-								className='hover:bg-[#14165b]'
+								className='dark:hover:bg-[#14165b] hover:bg-[#dbd0d0]'
 							>
 								<td className='border-b px-4 py-2'>{index + 1}</td>
 								<td className='border-b px-4 py-2'>{doctor.name}</td>
@@ -119,7 +134,7 @@ export default function DoctorPage() {
 								<td className='border-b px-4 py-2'>
 									<button
 										onClick={() => {
-											deleteDoctor(doctor.id)
+											confirmDeleteDoctor(doctor.id)
 										}}
 										className='bg-red-600 p-3 text-white rounded-lg hover:bg-red-700'
 									>
@@ -130,6 +145,13 @@ export default function DoctorPage() {
 						))}
 					</tbody>
 				</table>
+			)}
+			{selectedDoctor && (
+				<ConfirmPopup
+					onConfirm={handleConfirmDelete}
+					onCancel={() => setSelectedDoctor(null)}
+					message='Вы уверены, что хотите удалить этого доктора?'
+				/>
 			)}
 		</div>
 	)
