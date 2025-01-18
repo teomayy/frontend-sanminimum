@@ -123,7 +123,7 @@ export default function DoctorPage() {
 						</tr>
 					</thead>
 					<tbody>
-						{doctors?.data?.map((doctor, index) => (
+						{doctors?.data.map((doctor, index) => (
 							<tr
 								key={doctor.id}
 								className='dark:hover:bg-[#14165b] hover:bg-[#dbd0d0]'
