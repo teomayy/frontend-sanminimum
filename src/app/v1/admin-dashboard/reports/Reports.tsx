@@ -10,6 +10,8 @@ import Loader from '@/components/ui/Loader'
 import { DatePickerField } from '@/components/ui/fields/DatePicker'
 import { ConfirmPopup } from '@/components/ui/popups/ConfirmPopup'
 
+import { IReport } from '@/types/report.types'
+
 import { adminService } from '@/services/admin.service'
 
 export default function ReportsPage() {
@@ -27,7 +29,7 @@ export default function ReportsPage() {
 		data: reports = [],
 		isLoading,
 		refetch
-	} = useQuery({
+	} = useQuery<IReport[]>({
 		queryKey: ['reports'],
 		queryFn: () => adminService.getReports()
 	})
@@ -165,7 +167,7 @@ export default function ReportsPage() {
 				</thead>
 				<tbody>
 					{paginatedReports.length > 0 ? (
-						paginatedReports.map(report => (
+						paginatedReports.map((report: IReport) => (
 							<tr key={report.id}>
 								<td className='border-b px-4 py-2'>{report.fullName}</td>
 								<td className='border-b px-4 py-2'>{report.workplace}</td>

@@ -18,7 +18,9 @@ export function Statistics() {
 						key={statistic.label}
 					>
 						<div className='text-xl'>{statistic.label}</div>
-						<div className='text-3xl font-semibold'>{statistic.value}</div>
+						<div className='text-3xl font-semibold'>
+							{statistic.value.toLocaleString()}
+						</div>
 					</div>
 				))
 			) : (
