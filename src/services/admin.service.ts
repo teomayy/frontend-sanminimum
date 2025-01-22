@@ -1,4 +1,5 @@
 import { TypeUserForm } from '@/types/auth.types'
+import { IDoctor } from '@/types/doctor.types'
 
 import { axiosWithAuth } from '@/api/interceptors'
 
@@ -10,8 +11,14 @@ class AdminService {
 		return response.data
 	}
 
-	async getDoctors() {
-		return axiosWithAuth.get('/admin/doctors')
+	async getDoctors(): Promise<IDoctor[]> {
+		try {
+			const response = await axiosWithAuth.get('/admin/doctors')
+			return response.data
+		} catch (error) {
+			console.error('Ошибка при получении списка докторов:', error)
+			throw new Error('Не удалось получить список докторов')
+		}
 	}
 
 	async getReports(doctorId?: string) {

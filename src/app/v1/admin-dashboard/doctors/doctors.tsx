@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/buttons/Button'
 import { Field } from '@/components/ui/fields/Field'
 import { ConfirmPopup } from '@/components/ui/popups/ConfirmPopup'
 
+import { IDoctor } from '@/types/doctor.types'
+
 import { adminService } from '@/services/admin.service'
 
 export default function DoctorPage() {
@@ -22,10 +24,10 @@ export default function DoctorPage() {
 	const [selectedDoctor, setSelectedDoctor] = useState<string | null>(null)
 
 	const {
-		data: doctors,
+		data: doctors = [],
 		refetch,
 		isPending
-	} = useQuery({
+	} = useQuery<IDoctor[], Error>({
 		queryKey: ['doctors'],
 		queryFn: adminService.getDoctors
 	})
@@ -123,7 +125,7 @@ export default function DoctorPage() {
 						</tr>
 					</thead>
 					<tbody>
-						{doctors?.data.map((doctor, index) => (
+						{doctors?.map((doctor: IDoctor, index: number) => (
 							<tr
 								key={doctor.id}
 								className='dark:hover:bg-[#14165b] hover:bg-[#dbd0d0]'
