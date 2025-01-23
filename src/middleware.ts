@@ -58,13 +58,16 @@ export const config = {
 // Моделируем функцию получения роли пользователя
 async function getUserRole(refreshToken: string): Promise<string | null> {
 	try {
-		const response = await fetch('http://localhost:4200/api/auth/verify-role', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${refreshToken}`
+		const response = await fetch(
+			'https://mses-sanminimum.uz/api/auth/verify-role',
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${refreshToken}`
+				}
 			}
-		})
+		)
 
 		if (!response.ok) {
 			console.error('Ошибка ответа от сервера:', await response.text())
