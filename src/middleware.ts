@@ -65,7 +65,8 @@ async function getUserRole(refreshToken: string): Promise<string | null> {
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${refreshToken}`
-				}
+				},
+				credentials: 'include'
 			}
 		)
 
