@@ -31,11 +31,6 @@ export async function middleware(req: NextRequest) {
 	const isDoctor = userRole === 'doctor'
 
 	if (req.nextUrl.pathname === '/v1') {
-		const cachedPath = req.cookies.get('lastPath')?.value
-		if (cachedPath) {
-			url.pathname = cachedPath
-			return NextResponse.redirect(url)
-		}
 		if (isAdmin) {
 			return NextResponse.redirect(new URL('/v1/admin-dashboard', req.url))
 		} else if (isDoctor) {
@@ -49,15 +44,6 @@ export async function middleware(req: NextRequest) {
 
 	if (req.nextUrl.pathname.startsWith('/v1/doctor-dashboard') && !isDoctor) {
 		return NextResponse.redirect(new URL('/auth', req.url))
-	}
-
-	if (isAdmin || isDoctor) {
-		const response = NextResponse.next()
-		response.cookies.set('lastPath', req.nextUrl.pathname, {
-			path: '/',
-			httpOnly: true
-		})
-		return response
 	}
 
 	return NextResponse.next()
