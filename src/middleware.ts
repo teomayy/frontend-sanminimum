@@ -57,7 +57,7 @@ export const config = {
 async function getUserRole(refreshToken: string): Promise<string | null> {
 	try {
 		const response = await fetch(
-			'http://mses-sanminimum.uz/api/auth/verify-role',
+			'https://mses-sanminimum.uz/api/auth/verify-role',
 			{
 				method: 'POST',
 				headers: {
