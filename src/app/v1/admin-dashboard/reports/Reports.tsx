@@ -48,7 +48,7 @@ export default function ReportsPage() {
 
 	const { mutate: deleteReport } = useMutation({
 		mutationKey: ['deleteReport'],
-		mutationFn: adminService.deleteDoctor,
+		mutationFn: adminService.deleteReport,
 		onSuccess: () => {
 			toast.success('Отчет успешно удален!')
 			refetch()
