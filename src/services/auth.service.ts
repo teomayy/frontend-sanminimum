@@ -27,10 +27,28 @@ export const authService = {
 	},
 
 	async logout() {
-		const response = await axiosClassic.post<boolean>('/auth/logout')
+		try {
+			const response = await axiosClassic.post<boolean>(
+				'/auth/logout',
+				{},
+				{ withCredentials: true }
+			)
 
-		if (response.data) removeFromStorage()
+			document.cookie.split(';').forEach(c => {
+				document.cookie = c
+					.replace(/^ +/, '')
+					.replace(/= */, '=;expires=' + new Date().toUTCString() + ';path=/')
+			})
+			localStorage.clear()
+			sessionStorage.clear
 
-		return response
+			window.location.href = '/auth'
+
+			if (response.data) removeFromStorage()
+
+			return response
+		} catch (error) {
+			console.error('Ошибка при выходе', error)
+		}
 	}
 }
