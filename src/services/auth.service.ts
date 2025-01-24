@@ -29,7 +29,7 @@ export const authService = {
 	async logout() {
 		try {
 			const response = await axiosClassic.post<boolean>(
-				'/auth/force-logout',
+				'/auth/logout',
 				{},
 				{ withCredentials: true }
 			)
