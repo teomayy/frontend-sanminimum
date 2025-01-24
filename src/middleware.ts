@@ -57,6 +57,10 @@ export const config = {
 
 // Моделируем функцию получения роли пользователя
 async function getUserRole(refreshToken: string): Promise<string | null> {
+	if (!refreshToken) {
+		console.error('Ошибка: refreshToken отсутствует')
+		return null
+	}
 	try {
 		const response = await fetch(
 			'https://mses-sanminimum.uz/api/auth/verify-role',

@@ -13,11 +13,12 @@ export const getAccessToken = () => {
 export const saveTokenStorage = (accessToken: string) => {
 	Cookies.set(EnumTokens.ACCESS_TOKEN, accessToken, {
 		domain: 'mses-sanminimum.uz',
-		sameSite: 'strict',
+		sameSite: 'none',
 		expires: 1
 	})
 }
 
 export const removeFromStorage = () => {
 	Cookies.remove(EnumTokens.ACCESS_TOKEN)
+	Cookies.remove(EnumTokens.REFRESH_TOKEN)
 }
