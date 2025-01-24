@@ -1,6 +1,7 @@
 export interface IReport {
 	id: string
 	fullName: string
+	doctorId: string
 	birthDate: string
 	workplace: string
 	position: string

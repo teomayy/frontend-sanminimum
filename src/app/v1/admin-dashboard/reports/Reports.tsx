@@ -10,6 +10,7 @@ import Loader from '@/components/ui/Loader'
 import { DatePickerField } from '@/components/ui/fields/DatePicker'
 import { ConfirmPopup } from '@/components/ui/popups/ConfirmPopup'
 
+import { IDoctor } from '@/types/doctor.types'
 import { IReport } from '@/types/report.types'
 
 import { adminService } from '@/services/admin.service'
@@ -19,7 +20,8 @@ export default function ReportsPage() {
 		searchQuery: '',
 		status: 'all',
 		startDate: '',
-		endDate: ''
+		endDate: '',
+		doctorId: ''
 	})
 	const [currentPage, setCurrentPage] = useState(1)
 	const pageSize = 10
@@ -32,6 +34,11 @@ export default function ReportsPage() {
 	} = useQuery<IReport[]>({
 		queryKey: ['reports'],
 		queryFn: () => adminService.getReports()
+	})
+
+	const { data: doctor = [] } = useQuery<IDoctor[]>({
+		queryKey: ['doctor'],
+		queryFn: () => adminService.getDoctors()
 	})
 
 	const handleFilterChange = (field: string, value: string) => {
@@ -78,6 +85,9 @@ export default function ReportsPage() {
 				.includes(filters.searchQuery.toLowerCase()) ||
 			report.workplace.toLowerCase().includes(filters.searchQuery.toLowerCase())
 
+		const matchesDoctor =
+			!filters.doctorId || report.doctorId === filters.doctorId
+
 		// Фильтр по статусу
 		const expiryDate = dayjs(report.expiryDate)
 		const today = dayjs()
@@ -98,7 +108,7 @@ export default function ReportsPage() {
 			(!filters.endDate ||
 				dayjs(report.issueDate).isBefore(dayjs(filters.endDate)))
 
-		return matchesQuery && matchesStatus && matchesDateRange
+		return matchesQuery && matchesDoctor && matchesStatus && matchesDateRange
 	})
 
 	const paginatedReports = filteredReports.slice(
@@ -123,6 +133,26 @@ export default function ReportsPage() {
 						onChange={e => handleFilterChange('searchQuery', e.target.value)}
 						className='border p-3 rounded'
 					/>
+				</div>
+
+				<div className='flex flex-col gap-2'>
+					<label htmlFor='doctor'>По доктору</label>
+					<select
+						id='doctor'
+						value={filters.doctorId}
+						onChange={e => handleFilterChange('doctorId', e.target.value)}
+						className='border p-3 rounded'
+					>
+						<option value=''>Все доктора</option>
+						{doctor.map(doctor => (
+							<option
+								key={doctor.id}
+								value={doctor.id}
+							>
+								{doctor.name}
+							</option>
+						))}
+					</select>
 				</div>
 
 				<div className='flex flex-col gap-2'>
