@@ -62,7 +62,7 @@ export function Settings() {
 							{...register('password')}
 							extra='mb-10'
 						/>
-						<div className='sm:block relative'>
+						<div className='sm:hidden flex'>
 							<LogoutButton />
 						</div>
 					</div>
