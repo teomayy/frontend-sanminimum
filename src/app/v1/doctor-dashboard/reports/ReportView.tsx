@@ -91,7 +91,7 @@ export function ReportView() {
 	}
 
 	return (
-		<div className='rounded-lg max-w-full overflow-x-auto'>
+		<div className='rounded-lg max-w-full overflow-x-auto min-h-screen'>
 			<div className='flex flex-col md:flex-row justify-between items-center mb-4'>
 				<h2 className='text-xl md:text-2xl font-bold mb-4 md:mb-0'>
 					{isArchivedView ? 'Архив отчетов' : 'Мои отчеты'}
@@ -161,7 +161,7 @@ export function ReportView() {
 				/>
 			</div>
 			<div className='overflow-x-hidden max-h-screen mt-20'>
-				<table className='table-auto w-full  text-left border-collapse text-[7px] sm:text-[15px]'>
+				<table className='table-auto w-full  text-left border-collapse text-[4px] sm:text-[15px]'>
 					<thead className='dark:text-brandLinear sticky top-0 z-10 '>
 						<tr className='border-b'>
 							<th className='border-b px-4 py-2'>ФИО</th>

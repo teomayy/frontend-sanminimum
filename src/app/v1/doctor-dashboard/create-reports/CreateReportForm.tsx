@@ -39,7 +39,7 @@ export function CreateReportForm() {
 	}
 
 	return (
-		<div className='max-x-full overflow-auto mb-20'>
+		<div className='max-x-full overflow-auto mb-20 min-h-screen'>
 			<form
 				onSubmit={handleSubmit(onSubmit)}
 				className='mx-auto text-bg dark:text-white'
