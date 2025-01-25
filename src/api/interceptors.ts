@@ -8,7 +8,7 @@ import {
 import { authService } from '@/services/auth.service'
 
 const options: CreateAxiosDefaults = {
-	baseURL: 'https://mses-sanminimum/api',
+	baseURL: 'https://mses-sanminimum.uz/api',
 	headers: {
 		'Content-Type': 'application/json'
 	},
