@@ -120,7 +120,7 @@ export default function DoctorPage() {
 			{isPending ? (
 				<Loader />
 			) : (
-				<div className='overflow-auto mb-20'>
+				<div className='overflow-auto mb-24'>
 					<table className='table-auto w-full  text-left border-collapse text-sm sm:text-base'>
 						<thead className='dark:text-brandLinear sticky top-0 z-10'>
 							<tr className='border-b '>
