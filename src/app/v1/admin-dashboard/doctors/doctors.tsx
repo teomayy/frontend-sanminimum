@@ -74,7 +74,7 @@ export default function DoctorPage() {
 	}
 
 	return (
-		<div className='overflow-auto h-screen p-4'>
+		<div className='overflow-auto h-screen '>
 			<Heading title='Управление докторами' />
 
 			<div className='mb-4'>
