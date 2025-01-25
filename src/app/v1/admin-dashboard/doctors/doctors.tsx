@@ -114,7 +114,7 @@ export default function DoctorPage() {
 
 				<Button onClick={handleAddDoctor}>Добавить</Button>
 			</div>
-			<div className='my-3 h-0.5 bg-brandLinear dark:bg-border w-full' />
+			<div className='my-3 h-0.5 bg-brandLinear dark:bg-border w-full mb-20' />
 
 			<h2 className='text-xl font-semibold'>Список докторов</h2>
 			{isPending ? (
