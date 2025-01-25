@@ -1,5 +1,8 @@
+'use client'
+
 import { GanttChartSquare } from 'lucide-react'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 import { COLORS } from '@/constants/color.constants'
 
@@ -10,6 +13,29 @@ import { MenuItem } from './MenuItem'
 import { MENU } from './menu.data'
 
 export function Sidebar() {
+	const [isMobile, setIsMobile] = useState(false)
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsMobile(window.innerWidth <= 768)
+		}
+		handleResize()
+		window.addEventListener('resize', handleResize)
+		return () => window.removeEventListener('resize', handleResize)
+	}, [])
+
+	if (isMobile) {
+		return (
+			<nav className='fixed bottom-0 left-0 right-0 bg-white dark:bg-sidebar border-t border-brandLinear dark:border-border flex justify-around p-2 z-10'>
+				{MENU.map(item => (
+					<MenuItem
+						item={item}
+						key={item.link}
+					/>
+				))}
+			</nav>
+		)
+	}
 	return (
 		<aside className='border-r border-r-brandLinear dark:border-r-border h-full flex flex-col justify-between dark:bg-sidebar'>
 			<div>

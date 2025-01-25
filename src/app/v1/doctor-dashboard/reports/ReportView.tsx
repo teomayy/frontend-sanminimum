@@ -91,12 +91,12 @@ export function ReportView() {
 	}
 
 	return (
-		<div className=' p-6 rounded-lg '>
-			<div className='flex justify-between items-center mb-4'>
-				<h2 className='text-2xl font-bold mb-4'>
+		<div className='rounded-lg max-w-full overflow-x-auto'>
+			<div className='flex flex-col md:flex-row justify-between items-center mb-4'>
+				<h2 className='text-xl md:text-2xl font-bold mb-4 md:mb-0'>
 					{isArchivedView ? 'Архив отчетов' : 'Мои отчеты'}
 				</h2>
-				<div className='flex gap-4'>
+				<div className='flex sm:flex-row gap-4'>
 					<button
 						className='bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600'
 						onClick={() => router.push('/v1/doctor-dashboard/create-reports')}
@@ -111,9 +111,8 @@ export function ReportView() {
 					</button>
 				</div>
 			</div>
-
-			<div className='flex gap-4 mb-6'>
-				<div className='flex flex-col gap-2 w-[400px]'>
+			<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6'>
+				<div className='flex flex-col gap-2'>
 					<label htmlFor=''>Поиск</label>
 					<input
 						type='text'
@@ -123,8 +122,7 @@ export function ReportView() {
 						className='bg-transparent border-b p-3 rounded '
 					/>
 				</div>
-
-				<div className='flex flex-col gap-2 text-[#000] dark:bg-transparent dark:text-white/50 '>
+				<div className='flex flex-col gap-2'>
 					<label>По статусу</label>
 					<select
 						value={statusFilter}
@@ -138,35 +136,32 @@ export function ReportView() {
 					</select>
 				</div>
 
-				<div className='flex gap-7 justify-center items-center w-1/3'>
-					<DatePickerField
-						id='startDate'
-						label='С даты'
-						value={dateRange.startDate}
-						onChange={value =>
-							setDateRange(prev => ({
-								...prev,
-								startDate: value
-							}))
-						}
-					/>
+				<DatePickerField
+					id='startDate'
+					label='С даты'
+					value={dateRange.startDate}
+					onChange={value =>
+						setDateRange(prev => ({
+							...prev,
+							startDate: value
+						}))
+					}
+				/>
 
-					<DatePickerField
-						id='endDate'
-						label='По дату'
-						value={dateRange.endDate}
-						onChange={value =>
-							setDateRange(prev => ({
-								...prev,
-								endDate: value
-							}))
-						}
-						extra='w-1/2'
-					/>
-				</div>
+				<DatePickerField
+					id='endDate'
+					label='По дату'
+					value={dateRange.endDate}
+					onChange={value =>
+						setDateRange(prev => ({
+							...prev,
+							endDate: value
+						}))
+					}
+				/>
 			</div>
 			<div className='overflow-x-hidden max-h-screen mt-20'>
-				<table className='table-auto w-full  text-left border-collapse'>
+				<table className='table-auto w-full  text-left border-collapse text-[7px] sm:text-[15px]'>
 					<thead className='dark:text-brandLinear sticky top-0 z-10 '>
 						<tr className='border-b'>
 							<th className='border-b px-4 py-2'>ФИО</th>

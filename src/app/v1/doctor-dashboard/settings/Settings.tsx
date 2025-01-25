@@ -2,6 +2,7 @@
 
 import { SubmitHandler, useForm } from 'react-hook-form'
 
+import { LogoutButton } from '@/components/doctor-dashboard-layout/sidebar/LogoutButton'
 import { Button } from '@/components/ui/buttons/Button'
 import { Field } from '@/components/ui/fields/Field'
 
@@ -29,12 +30,12 @@ export function Settings() {
 	}
 
 	return (
-		<div>
+		<div className='p-6 flex justify-start'>
 			<form
-				className='w-2/4'
+				className='w-full max-w-2xl'
 				onSubmit={handleSubmit(onSubmit)}
 			>
-				<div className='grid grid-cols-2 gap-10'>
+				<div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
 					<div>
 						<Field
 							id='login'
@@ -69,6 +70,9 @@ export function Settings() {
 				>
 					Сохранить
 				</Button>
+				<div className='sm:hidden flex mt-4'>
+					<LogoutButton />
+				</div>
 			</form>
 		</div>
 	)
