@@ -91,7 +91,7 @@ export function ReportView() {
 	}
 
 	return (
-		<div className='rounded-lg max-w-full overflow-x-auto min-h-screen'>
+		<div className='rounded-lg max-w-full overflow-x-auto min-h-screen mb-20'>
 			<div className='flex flex-col md:flex-row justify-between items-center mb-4'>
 				<h2 className='text-xl md:text-2xl font-bold mb-4 md:mb-0'>
 					{isArchivedView ? 'Архив отчетов' : 'Мои отчеты'}
