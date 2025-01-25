@@ -114,13 +114,13 @@ export default function DoctorPage() {
 
 				<Button onClick={handleAddDoctor}>Добавить</Button>
 			</div>
-			<div className='my-3 h-0.5 bg-brandLinear dark:bg-border w-full mb-20' />
+			<div className='my-3 h-0.5 bg-brandLinear dark:bg-border w-full ' />
 
 			<h2 className='text-xl font-semibold'>Список докторов</h2>
 			{isPending ? (
 				<Loader />
 			) : (
-				<div className='overflow-auto'>
+				<div className='overflow-auto mb-20'>
 					<table className='table-auto w-full  text-left border-collapse text-sm sm:text-base'>
 						<thead className='dark:text-brandLinear sticky top-0 z-10'>
 							<tr className='border-b '>
