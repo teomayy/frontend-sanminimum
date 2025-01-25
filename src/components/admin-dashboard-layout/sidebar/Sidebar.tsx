@@ -27,7 +27,7 @@ export function Sidebar() {
 
 	if (isMobile) {
 		return (
-			<nav className='sticky bottom-0 left-0 right-0 bg-white dark:bg-sidebar border-t border-brandLinear dark:border-border flex justify-around p-2 z-10'>
+			<nav className='fixed bottom-0 left-0 right-0 bg-white dark:bg-sidebar border-t border-brandLinear dark:border-border flex justify-around p-2 z-10'>
 				{MENU.map(item => (
 					<MenuItem
 						item={item}

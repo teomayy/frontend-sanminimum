@@ -119,7 +119,7 @@ export default function ReportsPage() {
 	if (isLoading) return <Loader />
 
 	return (
-		<div className='rounded-lg max-w-full overflow-x-auto'>
+		<div className='rounded-lg max-w-full '>
 			<Heading title='Управление отчетами' />
 
 			<div className='grid grid-col-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 '>
