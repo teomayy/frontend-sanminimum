@@ -2,6 +2,7 @@
 
 import { SubmitHandler, useForm } from 'react-hook-form'
 
+import { LogoutButton } from '@/components/doctor-dashboard-layout/sidebar/LogoutButton'
 import { Button } from '@/components/ui/buttons/Button'
 import { Field } from '@/components/ui/fields/Field'
 
@@ -61,6 +62,9 @@ export function Settings() {
 							{...register('password')}
 							extra='mb-10'
 						/>
+						<div className='sm:block relative'>
+							<LogoutButton />
+						</div>
 					</div>
 				</div>
 				<Button
