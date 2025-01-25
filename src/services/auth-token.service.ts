@@ -12,7 +12,7 @@ export const getAccessToken = () => {
 
 export const saveTokenStorage = (accessToken: string) => {
 	Cookies.set(EnumTokens.ACCESS_TOKEN, accessToken, {
-		domain: 'mses-sanminimum.uz',
+		domain: 'mses-sanminimum',
 		sameSite: 'lax',
 		expires: 1
 	})

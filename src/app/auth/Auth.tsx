@@ -40,9 +40,9 @@ export function Auth() {
 		mutate(data)
 	}
 	return (
-		<div className='flex min-h-screen dark:bg-[#0b0c2e] bg-[#6e6541]'>
+		<div className='flex min-h-screen items-center justify-center dark:bg-[#0b0c2e] bg-[#6e6541] p-4'>
 			<form
-				className='w-1/4 m-auto dark:bg-sidebar bg-[#b19e70] text-white bg-text-black  rounded-xl p-layout'
+				className='w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl dark:bg-sidebar bg-[#b19e70] text-white bg-text-black  rounded-xl p-6 shadow-lg'
 				onSubmit={handleSubmit(onSubmit)}
 			>
 				<Heading title='Авторизация' />
@@ -66,7 +66,7 @@ export function Auth() {
 						required: 'Password is required'
 					})}
 				/>
-				<div className='flex items-center gap-5 justify-center'>
+				<div className='flex flex-col md:flex-row items-center gap-4 justify-center'>
 					<Button onClick={() => setIsLoginForm(true)}>Войти</Button>
 				</div>
 			</form>

@@ -119,11 +119,11 @@ export default function ReportsPage() {
 	if (isLoading) return <Loader />
 
 	return (
-		<div className='p-6 rounded-lg'>
+		<div className='p-6 rounded-lg max-w-full overflow-x-auto'>
 			<Heading title='Управление отчетами' />
 
-			<div className='flex gap-6 mb-6'>
-				<div className='flex flex-col gap-2 w-[400px]'>
+			<div className='grid grid-col-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 '>
+				<div className='flex flex-col gap-2'>
 					<label htmlFor='search'>Поиск</label>
 					<input
 						type='text'
@@ -184,7 +184,7 @@ export default function ReportsPage() {
 				/>
 			</div>
 
-			<table className='table-auto w-full text-left border-collapse'>
+			<table className='table-auto w-full text-left border-collapse text-[7px] sm:text-[15px]'>
 				<thead>
 					<tr>
 						<th className='border-b px-4 py-2'>ФИО</th>
