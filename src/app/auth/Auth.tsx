@@ -33,6 +33,9 @@ export function Auth() {
 			toast.success('Успешно зашли!')
 			reset()
 			push(DASHBOARD_PAGES.HOME)
+		},
+		onError() {
+			toast.error('Неверный логин или пароль!')
 		}
 	})
 

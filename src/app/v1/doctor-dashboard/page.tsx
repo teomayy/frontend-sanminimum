@@ -7,7 +7,7 @@ import { NO_INDEX_SITE } from '@/constants/seo.constants'
 import { Statistics } from './Statistics'
 
 export const metadata: Metadata = {
-	title: 'Dashboard',
+	title: 'Доктор панель',
 	...NO_INDEX_SITE
 }
 
