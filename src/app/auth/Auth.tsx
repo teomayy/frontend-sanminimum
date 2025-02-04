@@ -43,9 +43,9 @@ export function Auth() {
 		mutate(data)
 	}
 	return (
-		<div className='flex min-h-screen items-center justify-center dark:bg-[#0b0c2e] bg-[#6e6541] p-4'>
+		<div className='flex min-h-screen items-center justify-center dark:bg-[#0b0c2e] bg-[#dad8d1] p-4'>
 			<form
-				className='w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl dark:bg-sidebar bg-[#b19e70] text-white bg-text-black  rounded-xl p-6 shadow-lg'
+				className='w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl  bg-white/30 backdrop-blur-lg text-white bg-text-black  rounded-xl p-6 shadow-lg'
 				onSubmit={handleSubmit(onSubmit)}
 			>
 				<Heading title='Авторизация' />
