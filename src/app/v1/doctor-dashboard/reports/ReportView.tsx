@@ -101,7 +101,7 @@ export function ReportView() {
 						className='bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600'
 						onClick={() => router.push('/v1/doctor-dashboard/create-reports')}
 					>
-						Добавить отчет
+						Добавить заявку
 					</button>
 					<button
 						className='bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600'
